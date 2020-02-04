@@ -1,5 +1,5 @@
 
-FROM openjdk:8-jdk
+FROM openjdk:8-jdk-slim-buster
 MAINTAINER Deepak Kumar <deepak.hebbar@gmail.com>
 
 ENV VERSION_SDK_TOOLS "4333796"
@@ -20,9 +20,10 @@ RUN apt-get -qq update && \
       ruby \
       ruby-dev \
       lib32gcc1 \
-      lib32ncurses5 \
+      lib32ncurses6 \
       lib32z1 \
       unzip \
+      sudo \
       locales \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN locale-gen en_US.UTF-8
@@ -31,6 +32,9 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
     unzip /sdk.zip -d /sdk && \
     rm -v /sdk.zip
+
+# Install Firebase CLI
+RUN curl -sL firebase.tools | analytics=false bash
 
 RUN mkdir -p $ANDROID_HOME/licenses/ \
   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license \
